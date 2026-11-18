@@ -66,7 +66,14 @@ def buat_database_jika_belum_ada():
                         total INT, created_at DATETIME)""")
         cur.execute("""CREATE TABLE IF NOT EXISTS checkout_detail (
                         id INT AUTO_INCREMENT PRIMARY KEY,
-                        checkout_id INT, menu_id INT, qty INT, subtotal INT)""")
+                        checkout_id INT UNIQUE, 
+                        menu_id INT UNIQUE, 
+                        qty INT,
+                        subtotal INT,
+                    
+                        CONSTRAINT fk_menu FOREIGN KEY (menu_id) REFERENCES menu(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+                        CONSTRAINT fk_checkout FOREIGN KEY (Checkout_id) REFERENCES checkout(id) ON DELETE RESTRICT ON UPDATE CASCADE
+                    )""")
         cur.execute("SELECT COUNT(*) FROM menu")
         if cur.fetchone()[0] == 0:
             for t, n, p in DATA_AWAL:
