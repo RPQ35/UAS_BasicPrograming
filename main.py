@@ -62,11 +62,11 @@ def buat_database_jika_belum_ada():
                         id INT AUTO_INCREMENT PRIMARY KEY,
                         type VARCHAR(50), name VARCHAR(100), price INT)""")
         cur.execute("""CREATE TABLE IF NOT EXISTS checkout (
-                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        id VARCHAR(10) PRIMARY KEY,
                         total INT, created_at DATETIME)""")
         cur.execute("""CREATE TABLE IF NOT EXISTS checkout_detail (
                         id INT AUTO_INCREMENT PRIMARY KEY,
-                        checkout_id INT , 
+                        checkout_id VARCHAR(10) , 
                         menu_id INT , 
                         qty INT,
                         subtotal INT,
@@ -229,9 +229,15 @@ def checkout():
         return
     try:
         cur = conn.cursor()
-        cur.execute("INSERT INTO checkout (total, created_at) VALUES (%s,%s)",
-                    (total, datetime.now()))
-        checkout_id = cur.lastrowid
+
+        cur.execute("SELECT COUNT(*) FROM checkout")
+        checkout_id = hash_id(cur.fetchone()[0])
+
+        cur.execute(
+            "INSERT INTO checkout (id,total, created_at) VALUES (%s,%s, %s)",
+            (checkout_id,total, datetime.now()),
+        )
+
         for r in items:
             cur.execute("""INSERT INTO checkout_detail
                            (checkout_id, menu_id, qty, subtotal) VALUES (%s,%s,%s,%s)""",
@@ -241,7 +247,7 @@ def checkout():
             r[3] = 0
         refresh()
         messagebox.showinfo("Sukses",
-                            f"Pesanan disimpan.\nID: {hash_id(checkout_id)}\n"
+                            f"Pesanan disimpan.\nID: {checkout_id}\n"
                             f"Total: {rupiah(total)}")
     except mysql.connector.Error as e:
         messagebox.showerror("Error", str(e))
