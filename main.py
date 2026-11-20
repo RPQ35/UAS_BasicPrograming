@@ -66,8 +66,8 @@ def buat_database_jika_belum_ada():
                         total INT, created_at DATETIME)""")
         cur.execute("""CREATE TABLE IF NOT EXISTS checkout_detail (
                         id INT AUTO_INCREMENT PRIMARY KEY,
-                        checkout_id INT UNIQUE, 
-                        menu_id INT UNIQUE, 
+                        checkout_id INT , 
+                        menu_id INT , 
                         qty INT,
                         subtotal INT,
                     
