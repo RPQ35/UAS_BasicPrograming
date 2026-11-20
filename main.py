@@ -7,7 +7,7 @@ import mysql.connector
 # ---------------- SETTING ----------------
 DB_HOST = "localhost"
 DB_USER = "root"
-DB_PASS = "live"                # <- isi password mysql 
+DB_PASS = ""                # <- isi password mysql 
 DB_NAME = "warung_db"
 
 ADMIN_PASSWORD = "admin123"  # <- password admin panel & reset database
